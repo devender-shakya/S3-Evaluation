@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     fetchMyNotices();
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    });
 });
 
 function fetchMyNotices() {
@@ -30,7 +35,8 @@ function fetchMyNotices() {
 }
 
 function editNotice(noticeId) {
-
+    // Logic to populate edit form with notice details
+    // This part needs implementation based on your application's design and requirements.
 }
 
 function deleteNotice(noticeId) {
@@ -43,7 +49,7 @@ function deleteNotice(noticeId) {
         })
         .then(response => {
             if(response.ok) {
-                fetchMyNotices(); 
+                fetchMyNotices(); // Refresh the list after deletion
             } else {
                 alert('Failed to delete notice.');
             }
@@ -51,8 +57,3 @@ function deleteNotice(noticeId) {
         .catch(error => console.error('Error:', error));
     }
 }
-
-document.getElementById('logoutBtn').addEventListener('click', function() {
-    localStorage.removeItem('token');
-    window.location.href = 'login.html';
-});

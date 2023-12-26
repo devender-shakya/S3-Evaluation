@@ -13,6 +13,19 @@
             <button id="logoutBtn">Logout</button>
         </nav>
     </header>
+    <div class="add-notice-form">
+        <h2>Add Notice</h2>
+        <form id="addNoticeForm">
+            <input type="text" id="title" placeholder="Title" required>
+            <textarea id="body" placeholder="Body" required></textarea>
+            <select id="category">
+                <option value="parking">Parking</option>
+                <option value="covid">Covid</option>
+                <option value="maintenance">Maintenance</option>
+            </select>
+            <button type="submit">Add Notice</button>
+        </form>
+    </div>
     <div class="notices-container">
         <select id="categoryFilter">
             <option value="">All Categories</option>
