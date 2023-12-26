@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Notice Board</title>
-    <!-- Add your CSS link here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <select id="categoryFilter">
-        <option value="">All Categories</option>
-        <option value="parking">Parking</option>
-        <option value="covid">COVID</option>
-        <option value="maintenance">Maintenance</option>
-    </select>
-    <div id="notices">
-        <!-- Notices will be loaded here -->
+    <header>
+        <nav>
+            <a href="my-notices.html">My Notices</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+    <div class="notices-container">
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="parking">Parking</option>
+            <option value="covid">Covid</option>
+            <option value="maintenance">Maintenance</option>
+        </select>
+        <div id="notices"></div>
     </div>
-
     <script src="index.js"></script>
 </body>
 </html>

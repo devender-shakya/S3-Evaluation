@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Notices</title>
-    <!-- Add your CSS link here -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="myNotices">
-        <!-- User's notices will be loaded here -->
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+    <div class="my-notices-container">
+        <h2>My Notices</h2>
+        <div id="myNotices"></div>
     </div>
-
     <script src="my-notices.js"></script>
 </body>
 </html>

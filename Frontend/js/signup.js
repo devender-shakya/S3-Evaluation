@@ -1,27 +1,28 @@
-document.getElementById('signupForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+document.getElementById('signupForm').addEventListener('submit', function(e){
+    e.preventDefault();
 
-    const userData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        phone_number: document.getElementById('phone').value,
-        department: document.getElementById('department').value
-    };
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const phone_number = document.getElementById('phone_number').value;
+    const department = document.getElementById('department').value;
 
-    fetch('http://localhost:8000/api/users/register', {
+    fetch('http://localhost:8000/register', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ name, email, password, phone_number, department })
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
-        
+        if(data.success) {
+            window.location.href = 'login.html';
+        } else {
+            alert('Signup failed');
+        }
     })
-    .catch((error) => {
+    .catch(error => {
         console.error('Error:', error);
     });
 });
