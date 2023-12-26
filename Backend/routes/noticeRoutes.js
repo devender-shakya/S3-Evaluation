@@ -1,78 +1,53 @@
 const express = require('express');
 const Notice = require('../models/Notice');
-const auth = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
-router.post('/', auth, async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     try {
         const notice = new Notice({ ...req.body, user: req.user._id });
         await notice.save();
         res.status(201).send(notice);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 });
 
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const match = {};
-        if (req.query.category) {
-            match.category = req.query.category;
-        }
-        const notices = await Notice.find(match);
-        res.send(notices);
-        console.log("Notice get")
+        const { category } = req.query;
+        const query = category ? { category } : {};
+        const notices = await Notice.find(query).populate('user', 'name email');
+        res.status(200).send(notices);
     } catch (error) {
-        res.status(500).send();
-        console.log("Error While Getting Notices")
+        res.status(400).send(error.message);
     }
 });
 
-router.get('/:id', auth, async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     try {
         const notice = await Notice.findOne({ _id: req.params.id, user: req.user._id });
         if (!notice) {
-            return res.status(404).send();
+            return res.status(404).send('Notice not found');
         }
-        res.send(notice);
-        console.log("")
-    } catch (error) {
-        res.status(500).send();
-    }
-});
-
-router.put('/:id', auth, async (req, res) => {
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['title', 'body', 'category'];
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' });
-    }
-    try {
-        const notice = await Notice.findOne({ _id: req.params.id, user: req.user._id });
-        if (!notice) {
-            return res.status(404).send();
-        }
-        updates.forEach((update) => notice[update] = req.body[update]);
+        Object.assign(notice, req.body);
         await notice.save();
-        res.send(notice);
+        res.status(200).send(notice);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         const notice = await Notice.findOneAndDelete({ _id: req.params.id, user: req.user._id });
         if (!notice) {
-            return res.status(404).send();
+            return res.status(404).send('Notice not found');
         }
-        res.send(notice);
+        res.status(200).send('Notice deleted successfully');
     } catch (error) {
-        res.status(500).send();
+        res.status(400).send(error.message);
     }
 });
-
-
 
 module.exports = router;

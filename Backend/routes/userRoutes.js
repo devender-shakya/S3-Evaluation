@@ -1,38 +1,30 @@
 const express = require('express');
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-router.post('/register', async(req, res)=>{
+router.post('/register', async (req, res) => {
     try {
         const user = new User(req.body);
         await user.save();
-        const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-        res.status(201).send({ user, token });
-        console.log("User Register Successfully")
+        res.status(201).send('User registered successfully');
     } catch (error) {
-        res.status(400).send(error);
-        console.log("Error While registering")
+        res.status(400).send(error.message);
     }
-})
+});
 
 router.post('/login', async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
-        if (!user) {
-            return res.status(400).send('Unable to login');
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (!user || !(await user.comparePassword(password))) {
+            throw new Error('Invalid credentials');
         }
-        const isMatch = await bcrypt.compare(req.body.password, user.password);
-        if (!isMatch) {
-            return res.status(400).send('Unable to login');
-        }
-        const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-        res.send({ user, token });
-        console.log("Login Successfully")
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+        res.status(200).json({ token });
     } catch (error) {
-        res.status(400).send(error);
-        console.log("Login failed")
+        res.status(401).send(error.message);
     }
 });
 
