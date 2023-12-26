@@ -1,32 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
 const userRoutes = require('./routes/userRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
 
+require('dotenv').config();
 const app = express();
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
 app.use(express.json());
+app.use('/api/users', userRoutes);
+app.use('/api/notices', noticeRoutes);
 
-const startServer = async () => {
-    try {
-        // Connect to MongoDB
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log('MongoDB Connected');
-
-        // Setup routes
-        app.use('/users', userRoutes);
-        app.use('/notices', noticeRoutes);
-
-        // Start the server
-        const PORT = process.env.PORT || 8000;
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    } catch (err) {
-        console.error('Failed to connect to MongoDB or start server:', err);
-        process.exit(1); // Exit with a failure code
-    }
-};
-
-startServer();
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
